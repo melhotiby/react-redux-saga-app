@@ -1,8 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getUsersRequest, createUserRequest } from "../../actions/users";
+import {
+  getUsersRequest,
+  createUserRequest,
+  deleteUserRequest,
+  userError
+} from "../../actions/users";
 import UserList from "../UserList/UserList";
 import UserForm from "../UserForm/UserForm";
+import { Alert } from "reactstrap";
 import "./App.css";
 
 class App extends Component {
@@ -16,13 +22,30 @@ class App extends Component {
     this.props.createUserRequest({ firstName, lastName });
   };
 
+  handleDeleteUser = userId => e => {
+    this.props.deleteUserRequest(userId);
+  };
+
+  handleCloseAlert = () => {
+    this.props.userError({
+      error: ""
+    });
+  };
+
   render() {
     const { users } = this.props;
 
     return (
       <div className="container">
+        <Alert
+          color="danger"
+          isOpen={!!users.error}
+          toggle={this.handleCloseAlert}
+        >
+          {users.error}
+        </Alert>
         <UserForm onSubmit={this.handleSubmit} />
-        <UserList users={users.items} />
+        <UserList users={users.items} onDeleteUser={this.handleDeleteUser} />
       </div>
     );
   }
@@ -38,6 +61,8 @@ export default connect(
   mapStateToProps,
   {
     getUsersRequest,
-    createUserRequest
+    createUserRequest,
+    deleteUserRequest,
+    userError
   }
 )(App);

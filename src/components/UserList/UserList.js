@@ -7,7 +7,7 @@ const nameSort = sortWith([
   ascend(prop("lastName"))
 ]);
 
-const UserList = ({ users }) => {
+const UserList = ({ users, onDeleteUser }) => {
   return (
     <ListGroup>
       {nameSort(users).map(user => {
@@ -18,7 +18,7 @@ const UserList = ({ users }) => {
                 {`${user.firstName} ${user.lastName}`}
               </div>
               <div>
-                <Button outline color="danger">
+                <Button outline color="danger" onClick={onDeleteUser(user.id)}>
                   Delete
                 </Button>
               </div>

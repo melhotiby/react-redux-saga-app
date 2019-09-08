@@ -15,3 +15,7 @@ export const createUser = ({ firstName, lastName }) => {
     lastName: lastName
   });
 };
+
+export const deleteUser = ({ id }) => {
+  return axios.delete(`${USERS_INDEX_ENDPOINT}/${id}`);
+};

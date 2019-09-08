@@ -1,7 +1,16 @@
-import { takeEvery, takeLatest, call, fork, put } from "redux-saga/effects";
+import {
+  takeEvery,
+  takeLatest,
+  take,
+  call,
+  fork,
+  put
+} from "redux-saga/effects";
 import {
   GET_USERS_REQUEST,
   CREATE_USER_REQUEST,
+  DELETE_USER_REQUEST,
+  userError,
   getUsersSuccess
 } from "../actions/users";
 
@@ -15,7 +24,13 @@ function* getUsers() {
         items: response.data.data
       })
     );
-  } catch (e) {}
+  } catch (e) {
+    yield put(
+      userError({
+        error: "An error occurred when fetching the users list"
+      })
+    );
+  }
 }
 
 function* createUser(action) {
@@ -25,7 +40,26 @@ function* createUser(action) {
       lastName: action.payload.lastName
     });
     yield call(getUsers);
-  } catch (e) {}
+  } catch (e) {
+    yield put(
+      userError({
+        error: "An error occurred when trying to create a user"
+      })
+    );
+  }
+}
+
+function* deleteUser({ id }) {
+  try {
+    yield call(api.deleteUser, { id });
+    yield call(getUsers);
+  } catch (e) {
+    yield put(
+      userError({
+        error: "An error occurred when trying to delete a user"
+      })
+    );
+  }
 }
 
 function* watchGetUsersRequest() {
@@ -36,6 +70,17 @@ function* watchCreateUserRequest() {
   yield takeLatest(CREATE_USER_REQUEST, createUser);
 }
 
-const userSagas = [fork(watchGetUsersRequest), fork(watchCreateUserRequest)];
+function* watchDeleteUserRequest() {
+  while (true) {
+    const action = yield take(DELETE_USER_REQUEST);
+    yield call(deleteUser, { id: action.payload.userId });
+  }
+}
+
+const userSagas = [
+  fork(watchGetUsersRequest),
+  fork(watchCreateUserRequest),
+  fork(watchDeleteUserRequest)
+];
 
 export default userSagas;
