@@ -1,4 +1,7 @@
-import { GET_USERS_REQUEST, GET_USERS_SUCCESS } from "../actions/users";
+import {
+  // GET_USERS_REQUEST,
+  GET_USERS_SUCCESS
+} from "../actions/users";
 
 const INITIAL_STATE = {
   items: []

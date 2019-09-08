@@ -1,17 +1,21 @@
-import { takeEvery, call, fork } from "redux-sage/effects";
+import { takeEvery, call, fork, put } from "redux-saga/effects";
 import {
-  GET_USERS_REQUEST
+  GET_USERS_REQUEST,
   // GET_USERS_SUCCESS,
-  // getUsersRequest,
-  // getUsersSuccess
+  //getUsersRequest
+  getUsersSuccess
 } from "../actions/users";
 
 import * as api from "../api/users";
 
 function* getUsers() {
   try {
-    const results = yield call(api.getUsers);
-    console.log(results);
+    const response = yield call(api.getUsers);
+    yield put(
+      getUsersSuccess({
+        items: response.data.data
+      })
+    );
   } catch (e) {}
 }
 
