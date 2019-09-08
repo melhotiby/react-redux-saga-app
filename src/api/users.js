@@ -8,3 +8,10 @@ export const getUsers = () => {
     }
   });
 };
+
+export const createUser = ({ firstName, lastName }) => {
+  return axios.post(USERS_INDEX_ENDPOINT, {
+    firstName: firstName,
+    lastName: lastName
+  });
+};

@@ -1,8 +1,7 @@
-import { takeEvery, call, fork, put } from "redux-saga/effects";
+import { takeEvery, takeLatest, call, fork, put } from "redux-saga/effects";
 import {
   GET_USERS_REQUEST,
-  // GET_USERS_SUCCESS,
-  //getUsersRequest
+  CREATE_USER_REQUEST,
   getUsersSuccess
 } from "../actions/users";
 
@@ -19,10 +18,24 @@ function* getUsers() {
   } catch (e) {}
 }
 
+function* createUser(action) {
+  try {
+    yield call(api.createUser, {
+      firstName: action.payload.firstName,
+      lastName: action.payload.lastName
+    });
+    yield call(getUsers);
+  } catch (e) {}
+}
+
 function* watchGetUsersRequest() {
   yield takeEvery(GET_USERS_REQUEST, getUsers);
 }
 
-const userSagas = [fork(watchGetUsersRequest)];
+function* watchCreateUserRequest() {
+  yield takeLatest(CREATE_USER_REQUEST, createUser);
+}
+
+const userSagas = [fork(watchGetUsersRequest), fork(watchCreateUserRequest)];
 
 export default userSagas;

@@ -3,3 +3,12 @@
   padding: 20px;
   max-width: 600px;
 }
+
+.list-container {
+  display: flex;
+}
+
+.list-item {
+  flex-grow: 1;
+  margin: 0 auto;
+}

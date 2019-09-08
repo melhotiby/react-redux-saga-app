@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getUsersRequest } from "../../actions/users";
+import { getUsersRequest, createUserRequest } from "../../actions/users";
+import UserList from "../UserList/UserList";
+import UserForm from "../UserForm/UserForm";
 import "./App.css";
 
 class App extends Component {
@@ -10,10 +12,19 @@ class App extends Component {
     props.getUsersRequest();
   }
 
+  handleSubmit = ({ firstName, lastName }) => {
+    this.props.createUserRequest({ firstName, lastName });
+  };
+
   render() {
     const { users } = this.props;
 
-    return <div className="container">Test</div>;
+    return (
+      <div className="container">
+        <UserForm onSubmit={this.handleSubmit} />
+        <UserList users={users.items} />
+      </div>
+    );
   }
 }
 
@@ -26,6 +37,7 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   {
-    getUsersRequest
+    getUsersRequest,
+    createUserRequest
   }
 )(App);

@@ -11,6 +11,7 @@ import { createStore, applyMiddleware, compose } from "redux";
 import logger from "redux-logger";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./sagas";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://rem-rest-api.herokuapp.com/api";
